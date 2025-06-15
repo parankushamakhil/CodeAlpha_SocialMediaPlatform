@@ -1,0 +1,38 @@
+[
+  {
+    "id": "7b013bc7-b132-4e24-af58-baa6f03b1da0",
+    "userId": "bb0ac9fa-b7fc-4805-94b0-b0c1b646a271",
+    "content": "hiii",
+    "image": null,
+    "videoUrl": null,
+    "contentType": "post",
+    "likes": [
+      "bb0ac9fa-b7fc-4805-94b0-b0c1b646a271"
+    ],
+    "shares": [],
+    "hashtags": [],
+    "createdAt": "2025-06-15T19:15:35.569Z"
+  },
+  {
+    "id": "4ffa2c61-aab3-43ac-a249-dda6012263c3",
+    "userId": "136c49be-e9e5-41b3-b192-c44d8c61ce2f",
+    "content": "Just finished working on an amazing new project! The future of web development is looking bright. 🚀",
+    "image": "https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "likes": [
+      "40eaf46d-3cbe-4737-9284-3c0aa61fa3c2",
+      "bb0ac9fa-b7fc-4805-94b0-b0c1b646a271"
+    ],
+    "createdAt": "2025-06-15T08:57:48.265Z"
+  },
+  {
+    "id": "dea97be9-73e1-434d-907a-5d78b510d08a",
+    "userId": "40eaf46d-3cbe-4737-9284-3c0aa61fa3c2",
+    "content": "Beautiful sunset today! Nature never fails to inspire my art. 🌅",
+    "image": "https://images.pexels.com/photos/416978/pexels-photo-416978.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "likes": [
+      "136c49be-e9e5-41b3-b192-c44d8c61ce2f",
+      "bb0ac9fa-b7fc-4805-94b0-b0c1b646a271"
+    ],
+    "createdAt": "2025-06-15T06:57:48.265Z"
+  }
+]
