@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { X, Mail, Lock, User, UserCheck } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { LoadingSpinner } from '../UI/LoadingSpinner';
+import { Input } from '../Input';
+import { LoadingSpinner } from '../LoadingSpinner';
+import { Button } from '../Button';
 
 export const AuthModal = ({ isOpen, onClose }) => {
   const [isLogin, setIsLogin] = useState(true);

@@ -28,5 +28,15 @@
     "bio": "",
     "avatar": "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1",
     "createdAt": "2025-06-15T19:11:56.607Z"
+  },
+  {
+    "id": "5d99777f-cd38-4c83-b9c8-2a315ccba768",
+    "username": "nani1",
+    "email": "akhil12345@gmail.com",
+    "password": "$2a$10$IQKk4hiqB/rSwmVN6dZ3h.NHBBCuFPfiBqb46t.SIi3HLGVjxMQNm",
+    "fullName": "nani1",
+    "bio": "",
+    "avatar": "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1",
+    "createdAt": "2025-06-30T13:05:29.064Z"
   }
 ]

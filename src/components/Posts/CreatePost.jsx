@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Image, Send } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../utils/api';
-import { LoadingSpinner } from '../UI/LoadingSpinner';
+import { LoadingSpinner } from '../LoadingSpinner';
 
 export const CreatePost = ({ isOpen, onClose }) => {
   const [content, setContent] = useState('');

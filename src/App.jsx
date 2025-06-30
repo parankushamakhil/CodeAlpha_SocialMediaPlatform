@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import AuthProvider, { useAuth } from './context/AuthContext';
 import { Header } from './components/Layout/Header';
 import { AuthModal } from './components/Auth/AuthModal';
 import { Feed } from './components/Feed/Feed';
 import { CreatePost } from './components/Posts/CreatePost';
 import { Profile } from './components/Profile/Profile';
 import { UserSearch } from './components/Users/UserSearch';
-import { LoadingSpinner } from './components/UI/LoadingSpinner';
+import { LoadingSpinner } from './components/LoadingSpinner';
 import { Stories } from './components/Stories/Stories';
 import { Notifications } from './components/Notifications/Notifications';
 import { Bookmarks } from './components/Bookmarks/Bookmarks';
 import { Trending } from './components/Trending/Trending';
-import { CreateStory } from './components/CreateStory';
+import { CreateStory } from './components/Stories/CreateStory';
 import { Messages } from './components/Messages/Messages';
 import { Settings } from './components/Settings/Settings';
+import SuggestedUsers from './components/Users/SuggestedUsers';
 
 const AppContent = () => {
   const { user, loading } = useAuth();
@@ -80,10 +81,7 @@ const AppContent = () => {
             </div>
             <div className="hidden lg:block space-y-6">
               <Trending />
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
-                <h3 className="text-lg font-semibold mb-4">Suggested For You</h3>
-                {/* Add suggested users component here */}
-              </div>
+              <SuggestedUsers />
             </div>
           </div>
         );
@@ -119,8 +117,7 @@ const AppContent = () => {
             <div className="hidden lg:block space-y-6">
               <Trending />
               <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm sticky top-20">
-                <h3 className="text-lg font-semibold mb-4">Suggested For You</h3>
-                {/* Add suggested users component here */}
+                <SuggestedUsers />
               </div>
             </div>
           </div>
