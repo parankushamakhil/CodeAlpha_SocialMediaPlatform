@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { User, Users, Grid, Calendar } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../utils/api';
-import { LoadingSpinner } from '../UI/LoadingSpinner';
+import { LoadingSpinner } from '../LoadingSpinner';
 import { PostCard } from '../Posts/PostCard';
+import { EditProfileModal } from './EditProfileModal';
 
 export const Profile = ({ userId }) => {
   const [profileUser, setProfileUser] = useState(null);
@@ -12,7 +13,8 @@ export const Profile = ({ userId }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [followersCount, setFollowersCount] = useState(0);
   const [actionLoading, setActionLoading] = useState(false);
-  const { user: currentUser } = useAuth();
+  const { user: currentUser, setUser } = useAuth();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -134,6 +136,16 @@ export const Profile = ({ userId }) => {
               </div>
             </div>
 
+            {/* Edit Profile Button */}
+            {isOwnProfile && (
+              <button
+                onClick={() => setIsEditModalOpen(true)}
+                className="px-6 py-2 rounded-full font-medium transition-all duration-200 bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Edit Profile
+              </button>
+            )}
+
             {/* Follow Button */}
             {!isOwnProfile && currentUser && (
               <button
@@ -184,6 +196,8 @@ export const Profile = ({ userId }) => {
           </div>
         )}
       </div>
+
+      <EditProfileModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} />
     </div>
   );
 };

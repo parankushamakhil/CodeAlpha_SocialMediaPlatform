@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PostCard } from '../Posts/PostCard';
-import { LoadingSpinner } from '../UI/LoadingSpinner';
+import { LoadingSpinner } from '../LoadingSpinner';
 import { api } from '../../utils/api';
 
 export const Feed = ({ showAll = false }) => {
@@ -30,6 +30,10 @@ export const Feed = ({ showAll = false }) => {
         post.id === updatedPost.id ? updatedPost : post
       )
     );
+  };
+
+  const handlePostDelete = (postId) => {
+    setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
   };
 
   if (loading) {
@@ -100,6 +104,7 @@ export const Feed = ({ showAll = false }) => {
           key={post.id}
           post={post}
           onUpdate={handlePostUpdate}
+          onDelete={handlePostDelete}
         />
       ))}
     </div>

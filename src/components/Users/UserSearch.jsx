@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Search, UserPlus, UserCheck, Users } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../utils/api';
-import { LoadingSpinner } from '../UI/LoadingSpinner';
+import { Input } from '../Input';
+import { LoadingSpinner } from '../LoadingSpinner';
 
 export const UserSearch = ({ query, onUserSelect }) => {
   const [users, setUsers] = useState([]);

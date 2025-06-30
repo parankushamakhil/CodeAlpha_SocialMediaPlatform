@@ -3,7 +3,7 @@ import { Send } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../utils/api';
 import { formatDistanceToNow } from '../../utils/dateUtils';
-import { LoadingSpinner } from '../UI/LoadingSpinner';
+import { LoadingSpinner } from '../LoadingSpinner';
 
 export const CommentSection = ({ postId }) => {
   const [comments, setComments] = useState([]);

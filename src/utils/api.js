@@ -25,14 +25,18 @@ class ApiClient {
       clearTimeout(timeoutId);
       
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({
-          message: response.status === 401 ? 'Authentication required' :
-                   response.status === 403 ? 'Access denied' :
-                   response.status === 404 ? 'Resource not found' :
-                   'Network error'
-        }));
-        const error = await response.json().catch(() => ({ message: 'Network error' }));
-        throw new Error(error.message || `HTTP error! status: ${response.status}`);
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch (e) {
+          errorData = {
+            message: response.status === 401 ? 'Authentication required' :
+                     response.status === 403 ? 'Access denied' :
+                     response.status === 404 ? 'Resource not found' :
+                     'Network error'
+          };
+        }
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();

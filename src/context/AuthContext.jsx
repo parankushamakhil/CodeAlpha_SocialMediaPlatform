@@ -1,61 +1,65 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { api } from '../utils/api';
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const initAuth = async () => {
-      if (token) {
-        try {
-          const userData = await api.get('/users/me');
-          setUser(userData);
-        } catch (error) {
-          localStorage.removeItem('token');
-          setToken(null);
+      try {
+        const token = localStorage.getItem('token');
+        if (token) {
+          const data = await api.get('/users/me');
+          setUser(data.user);
         }
+      } catch (error) {
+        localStorage.removeItem('token');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
-
     initAuth();
-  }, [token]);
+  }, []);
 
   const login = async (email, password) => {
-    const response = await api.post('/auth/login', { email, password });
-    setToken(response.token);
-    setUser(response.user);
-    localStorage.setItem('token', response.token);
+    try {
+      const data = await api.post('/auth/login', { email, password });
+      localStorage.setItem('token', data.token);
+      setUser(data.user);
+      return data.user;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
   };
 
-  const signup = async (username, email, password, fullName) => {
-    const response = await api.post('/auth/signup', { username, email, password, fullName });
-    setToken(response.token);
-    setUser(response.user);
-    localStorage.setItem('token', response.token);
+  const signup = async (userData) => {
+    try {
+      const data = await api.post('/auth/signup', userData);
+      localStorage.setItem('token', data.token);
+      setUser(data.user);
+      return data.user;
+    } catch (error) {
+      console.error('Signup error:', error);
+      throw error;
+    }
   };
 
   const logout = () => {
-    setUser(null);
-    setToken(null);
     localStorage.removeItem('token');
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, signup, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, loading, setUser }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export default AuthProvider;

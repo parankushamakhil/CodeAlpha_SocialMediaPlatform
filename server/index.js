@@ -636,6 +636,169 @@ app.get('/api/search', authenticateToken, (req, res) => {
   res.json(results);
 });
 
+// Get user suggestions
+app.get('/api/users/suggestions', authenticateToken, (req, res) => {
+  try {
+    const currentUser = users.find(u => u.id === req.user.userId);
+    const followingIds = follows
+      .filter(f => f.followerId === req.user.userId)
+      .map(f => f.followingId);
+
+    const suggestions = users
+      .filter(u => u.id !== req.user.userId && !followingIds.includes(u.id))
+      .slice(0, 5); // Get top 5 suggestions
+
+    res.json(suggestions);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Update user profile
+app.put('/api/users/:id', authenticateToken, async (req, res) => {
+  if (req.user.userId !== req.params.id) {
+    return res.status(403).json({ message: 'You can only update your own profile.' });
+  }
+
+  try {
+    const { fullName, username, bio } = req.body;
+    const userIndex = users.findIndex(u => u.id === req.params.id);
+
+    if (userIndex === -1) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if new username is already taken
+    if (username !== users[userIndex].username) {
+      if (users.some(u => u.username === username)) {
+        return res.status(400).json({ message: 'Username is already taken.' });
+      }
+    }
+
+    users[userIndex] = {
+      ...users[userIndex],
+      fullName: fullName || users[userIndex].fullName,
+      username: username || users[userIndex].username,
+      bio: bio || users[userIndex].bio,
+    };
+
+    saveData();
+
+    const { password, ...userWithoutPassword } = users[userIndex];
+    res.json(userWithoutPassword);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get stories for the user's feed
+app.get('/api/stories', authenticateToken, (req, res) => {
+  try {
+    const followedUsers = follows
+      .filter(f => f.followerId === req.user.userId)
+      .map(f => f.followingId);
+
+    const feedStories = stories
+      .filter(s => followedUsers.includes(s.userId) || s.userId === req.user.userId)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .map(story => {
+        const user = users.find(u => u.id === story.userId);
+        return {
+          ...story,
+          user: {
+            username: user.username,
+            avatar: user.avatar
+          }
+        };
+      });
+
+    res.json(feedStories);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/api/users/:userId/stories', (req, res) => {
+  try {
+    const userStories = stories
+      .filter(s => s.userId === req.params.userId)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    res.json(userStories);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Update a post
+app.put('/api/posts/:id', authenticateToken, (req, res) => {
+  try {
+    const { content } = req.body;
+    const postIndex = posts.findIndex(p => p.id === req.params.id);
+
+    if (postIndex === -1) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    if (posts[postIndex].userId !== req.user.userId) {
+      return res.status(403).json({ message: 'You can only edit your own posts' });
+    }
+
+    posts[postIndex].content = content;
+    saveData();
+    res.json(posts[postIndex]);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Delete a post
+app.delete('/api/posts/:id', authenticateToken, (req, res) => {
+  try {
+    const postIndex = posts.findIndex(p => p.id === req.params.id);
+    if (postIndex === -1) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    if (posts[postIndex].userId !== req.user.userId) {
+      return res.status(403).json({ message: 'You can only delete your own posts' });
+    }
+
+    // Also delete associated comments
+    comments = comments.filter(c => c.postId !== req.params.id);
+
+    posts.splice(postIndex, 1);
+    saveData();
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get user profile
+app.get('/api/users/:username', (req, res) => {
+  const username = req.params.username.toLowerCase();
+  const user = users.find(u => u.username.toLowerCase() === username);
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+  
+  const userPosts = posts.filter(p => p.userId === user.id).length;
+  const followers = follows.filter(f => f.followedId === user.id).length;
+  const following = follows.filter(f => f.followerId === user.id).length;
+  
+  res.json({
+    id: user.id,
+    username: user.username,
+    fullName: user.fullName,
+    bio: user.bio,
+    avatar: user.avatar,
+    postsCount: userPosts,
+    followersCount: followers,
+    followingCount: following
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
